@@ -245,15 +245,6 @@ local function setRadialState(bool, sendMessage, delay)
         inNewMenu = false
     end
     if sendMessage then
-        -- print(bool, "bool", json.encode(FinalMenuItems))
-        -- SendNUIMessage({
-        --     action = "ui",
-        --     radial = bool,
-        --     items = FinalMenuItems,
-        --     toggle = Config.Toggle,
-        --     keybind = Config.Keybind
-        -- })
-
         SendNUIMessage({
             action = "setRadialMenu",
             data = FinalMenuItems
@@ -270,7 +261,7 @@ RegisterCommand('radialmenu', function()
         setRadialState(true, true)
         SetCursorLocation(0.5, 0.5)
     end
-end)
+end, false)
 
 RegisterKeyMapping('radialmenu', Lang:t("general.command_description"), 'keyboard', Config.Keybind)
 
