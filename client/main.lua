@@ -255,12 +255,18 @@ local function setRadialState(bool, sendMessage, delay)
 end
 
 -- Command
-
-RegisterCommand('radialmenu', function()
-    if ((IsDowned() and IsPoliceOrEMS()) or not IsDowned()) and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() and not inRadialMenu then
-        setRadialState(true, true)
+local function radialmenutoggle()
+    if ((IsDowned() and IsPoliceOrEMS()) or not IsDowned()) and not PlayerData.metadata["ishandcuffed"] and not IsPauseMenuActive() then
+        setRadialState(not inRadialMenu, true)
         SetCursorLocation(0.5, 0.5)
     end
+end
+
+RegisterCommand('radialmenu', function()
+    if not Config.Toggle then
+        radialmenutoggle()
+    end
+
 end, false)
 
 RegisterKeyMapping('radialmenu', Lang:t("general.command_description"), 'keyboard', Config.Keybind)
@@ -451,3 +457,14 @@ end)
 
 exports('AddOption', AddOption)
 exports('RemoveOption', RemoveOption)
+local function checkkeypress()
+    Wait(0)
+    if IsControlJustReleased(0, Config.ToggleKeybind) then
+        radialmenutoggle()
+    end
+    Wait(0)
+    SetTimeout(0, checkkeypress())
+end
+if Config.Toggle then
+    checkkeypress()
+end
